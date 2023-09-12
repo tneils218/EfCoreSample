@@ -61,5 +61,27 @@ namespace EfCoreSample.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteOrder(string id)
+        {
+            if (!ModelState.IsValid) return ValidationProblem(ModelState);
+           try
+            {
+                _db.Orders.Include(o => o.Items).ToList();
+                var oderRemove = _db.Orders.Find(id);
+                if (oderRemove != null) { 
+                    _db.Orders.Remove(oderRemove);
+                    await _db.SaveChangesAsync();
+                    return Ok(oderRemove);
+                } else
+            {
+                    return BadRequest("Không tìm thấy order");   
+            }
+
+            } catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }
