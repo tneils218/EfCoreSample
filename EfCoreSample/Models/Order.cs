@@ -6,6 +6,7 @@
         public DateTime CreatedAt { get; set; }
         public List<OrderItem> Items { get; set; } = null!;
 
+        public Order() { }
     
         public Order(List<OrderItem> items)
         {

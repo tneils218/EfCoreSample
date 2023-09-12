@@ -81,7 +81,6 @@ namespace EfCoreSample.Controllers
                 findProduct.Quantity = updatedProduct.Quantity;
                 findProduct.Description = updatedProduct.Description;
                 findProduct.Name = updatedProduct.Name;
-                _db.Products.Update(findProduct);   
                 _db.SaveChanges();
                 return Ok(findProduct);
             }
