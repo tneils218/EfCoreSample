@@ -32,7 +32,24 @@ namespace EfCoreSample.Controllers
                 var items = new List<OrderItem>();
                 foreach (var item in request.Items)
                 {
-                    items.Add(new OrderItem { ProductPrice = item.ProductPrice, Quantity = item.Quantity });
+                    var product = _db.Products.Find(item.ProductId);
+                    if(product != null)
+                    {
+                        if(product.Quantity >= item.Quantity)
+                        {
+                            items.Add(new OrderItem { ProductPrice = product.Price, Quantity = item.Quantity });
+                            product.Quantity -= item.Quantity;
+                        } 
+                        else
+                        {
+                            return BadRequest("Không đủ số lượng để order");
+                        }    
+                    }
+                    else
+                    {
+                        return BadRequest("Không tồn tại product");
+                    } 
+                        
                 }
                 var order = new Order(items);
                 _db.Orders.Add(order);

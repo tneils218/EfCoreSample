@@ -15,6 +15,7 @@ namespace EfCoreSample.Db.EntityTypeConfigurations
 
             builder.Property(e => e.CreatedAt).HasColumnName("created_at");
 
+
             builder.HasMany(e => e.Items)
                 .WithOne()
                 .HasForeignKey(e => e.OrderId)
