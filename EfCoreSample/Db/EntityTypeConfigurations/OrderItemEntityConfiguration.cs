@@ -20,6 +20,9 @@ namespace EfCoreSample.Db.EntityTypeConfigurations
 
             builder.Property(e => e.OrderId)
              .HasColumnName("order_id");
+            builder.Property(e => e.ProductId)
+                .HasDefaultValue(0)
+                .HasColumnName("product_id");
         }
     }
 }

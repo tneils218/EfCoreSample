@@ -23,7 +23,7 @@ namespace EfCoreSample.Services.Impls
                 if (product != null)
                 {
                     product.DecreaseQuantity(item.Quantity);
-                    order.Items.Add(OrderItem.Create(product.Price, item.Quantity));
+                    order.Items.Add(OrderItem.Create(product.Price, item.Quantity, item.ProductId));
                 }
             }
             _db.Orders.Add(order);
