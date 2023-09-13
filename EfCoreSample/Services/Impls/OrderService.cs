@@ -2,6 +2,7 @@
 using EfCoreSample.Models;
 using EfCoreSample.Services.DTOs;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Asn1.X509;
 
 namespace EfCoreSample.Services.Impls
 {
@@ -56,25 +57,28 @@ namespace EfCoreSample.Services.Impls
 
             foreach (var itemDto in orderDto.Items)
             {
-                var existingItem = order.Items.FirstOrDefault(item => item.Id == itemDto.ProductId);
+                var existingItem = order.Items.FirstOrDefault(item => item.ProductId == itemDto.ProductId);
+                var product = await _db.Products.FindAsync(itemDto.ProductId);
 
-                if (existingItem != null)
-                {
-                   
-                    existingItem.ProductPrice = existingItem.ProductPrice * itemDto.Quantity;
-                    existingItem.Quantity = itemDto.Quantity;
+                if (existingItem != null && product != null)
+                { 
+                    if(product.Quantity >= itemDto.Quantity)
+                    {
+                        product.DecreaseQuantity(itemDto.Quantity);
+                        existingItem.Quantity = existingItem.Quantity + itemDto.Quantity;
+
+                    }
                 }
                 else
                 {
+                   if(product != null)
+                    { 
+                    
+                    order.Items.Add(OrderItem.Create(product.Price, itemDto.Quantity, itemDto.ProductId));
+                    }
+                    
 
-                    var newItem = new OrderItem
-                    {
-                        Id = itemDto.ProductId,
-                        ProductPrice = itemDto.Quantity,
-                        Quantity = itemDto.Quantity,
-                        OrderId = Id
-                    };
-                    order.Items.Add(newItem);
+
                 }
             }
 
