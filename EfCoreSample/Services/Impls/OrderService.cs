@@ -42,6 +42,48 @@ namespace EfCoreSample.Services.Impls
             var orders = await query.ToListAsync();
             return orders;
         }
+
+        public async Task<Order> UpdateOrder(string Id, OrderDTO orderDto)
+        {
+            var order = await _db.Orders.Where(o => o.Id == Id).Include(o => o.Items).FirstOrDefaultAsync();
+
+            if (order == null)
+            {
+                return null; 
+            }
+
+            using var transaction = _db.Database.BeginTransaction();
+
+            foreach (var itemDto in orderDto.Items)
+            {
+                var existingItem = order.Items.FirstOrDefault(item => item.Id == itemDto.ProductId);
+
+                if (existingItem != null)
+                {
+                   
+                    existingItem.ProductPrice = existingItem.ProductPrice * itemDto.Quantity;
+                    existingItem.Quantity = itemDto.Quantity;
+                }
+                else
+                {
+
+                    var newItem = new OrderItem
+                    {
+                        Id = itemDto.ProductId,
+                        ProductPrice = itemDto.Quantity,
+                        Quantity = itemDto.Quantity,
+                        OrderId = Id
+                    };
+                    order.Items.Add(newItem);
+                }
+            }
+
+       
+            await _db.SaveChangesAsync();
+            transaction.Commit();
+
+            return order;
+        }
     }
 
 
