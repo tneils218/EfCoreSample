@@ -37,7 +37,7 @@ namespace EfCoreSample.Services.Impls
         {
             IQueryable<Order> query = _db.Orders.Include(o => o.Items);
             if (!string.IsNullOrEmpty(id))
-            {   
+            {
                 query = query.Where(o => o.Id == id);
             }
             var orders = await query.ToListAsync();
@@ -50,7 +50,7 @@ namespace EfCoreSample.Services.Impls
 
             if (order == null)
             {
-                return null; 
+                return null;
             }
 
             using var transaction = _db.Database.BeginTransaction();
@@ -59,30 +59,29 @@ namespace EfCoreSample.Services.Impls
             {
                 var existingItem = order.Items.FirstOrDefault(item => item.ProductId == itemDto.ProductId);
                 var product = await _db.Products.FindAsync(itemDto.ProductId);
-
-                if (existingItem != null && product != null)
-                { 
-                    if(product.Quantity >= itemDto.Quantity)
-                    {
-                        product.DecreaseQuantity(itemDto.Quantity);
-                        existingItem.Quantity = existingItem.Quantity + itemDto.Quantity;
-
-                    }
-                }
-                else
+                if (product != null)
                 {
-                   if(product != null)
-                    { 
-                    
-                    order.Items.Add(OrderItem.Create(product.Price, itemDto.Quantity, itemDto.ProductId));
+                    if (existingItem != null)
+                    {
+                        if (product.Quantity >= itemDto.Quantity)
+                        {
+                            product.DecreaseQuantity(itemDto.Quantity);
+                            existingItem.Quantity = existingItem.Quantity + itemDto.Quantity;
+                                
+                        }
                     }
-                    
+                    else
+                    {
+
+                        order.Items.Add(OrderItem.Create(product.Price, itemDto.Quantity, itemDto.ProductId));
 
 
+                    }
                 }
+
             }
 
-       
+
             await _db.SaveChangesAsync();
             transaction.Commit();
 
