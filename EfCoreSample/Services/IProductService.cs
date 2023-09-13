@@ -6,5 +6,6 @@ namespace EfCoreSample.Services
     public interface IProductService
     {
         Task<Product> CreateProduct(ProductDTO productDTO);
+        Task<List<Product>> GetAll(string? name = "");
     }
 }

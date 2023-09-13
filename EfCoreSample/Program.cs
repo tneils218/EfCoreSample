@@ -11,6 +11,8 @@ services.AddSwaggerGen();
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseMySQL(builder.Configuration.GetConnectionString("MySql")));
 services.AddScoped<IOrderService, OrderService>();
+services.AddScoped<IProductService, ProductService>();
+
 
 var app = builder.Build();
 

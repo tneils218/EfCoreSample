@@ -1,4 +1,7 @@
-﻿namespace EfCoreSample.Services.DTOs
+﻿using EfCoreSample.Controllers.Request;
+using Org.BouncyCastle.Utilities;
+
+namespace EfCoreSample.Services.DTOs
 {
     public class ProductDTO
     {
@@ -13,6 +16,10 @@
             Price = price;
             Quantity = quantity;
             Description = description;
+        }
+        public static ProductDTO Create(ProductRequest product)
+        { 
+            return new ProductDTO(product.Name, product.Price, product.Quantity, product.Description);
         }
     }
 }

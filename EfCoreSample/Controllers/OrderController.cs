@@ -26,12 +26,12 @@ namespace EfCoreSample.Controllers
             return Ok(orders);
         }
         [HttpPost]
-        public async Task<IActionResult> CreateOrder([FromBody] OrderRequest request)
+        public async Task<IActionResult> CreateOrder(OrderRequest request)
         {
             if (!ModelState.IsValid) return ValidationProblem(ModelState);
             try
             {
-                var orderDto = OrderDTO.Create(request.Items);
+                var orderDto = OrderDTO.CreateOrder(request.Items);
                 var order = await _orderService.CreateOrder(orderDto);
                 return CreatedAtAction(nameof(CreateOrder), new { id = order.Id }, order);
             }
@@ -60,6 +60,11 @@ namespace EfCoreSample.Controllers
         //    {
         //        return StatusCode(500, ex.Message);
         //    }
+        //}
+        //[HttpPut("{id}")] 
+        //public async Task<IActionResult> UpdateOrder(string id, OrderRequest request)
+        //{
+
         //}
     }
 }

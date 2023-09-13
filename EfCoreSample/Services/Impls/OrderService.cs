@@ -20,10 +20,10 @@ namespace EfCoreSample.Services.Impls
             foreach (var item in orderDto.Items)
             {
                 var product = await _db.Products.FindAsync(item.ProductId);
-                if (product != null && product.Quantity >= item.Quantity)
+                if (product != null)
                 {
+                    product.DecreaseQuantity(item.Quantity);
                     order.Items.Add(OrderItem.Create(product.Price, item.Quantity));
-                    product.Quantity -= item.Quantity;
                 }
             }
             _db.Orders.Add(order);
@@ -39,7 +39,6 @@ namespace EfCoreSample.Services.Impls
             {   
                 query = query.Where(o => o.Id == id);
             }
-
             var orders = await query.ToListAsync();
             return orders;
         }
