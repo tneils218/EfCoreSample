@@ -1,4 +1,6 @@
 using EfCoreSample.Db;
+using EfCoreSample.Services;
+using EfCoreSample.Services.Impls;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +10,7 @@ services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseMySQL(builder.Configuration.GetConnectionString("MySql")));
+services.AddScoped<IOrderService, OrderService>();
 
 var app = builder.Build();
 

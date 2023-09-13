@@ -7,7 +7,12 @@
 
         public List<OrderItem> Items { get; set; } = null!;
 
-        public Order() { }
+        public Order() 
+        {
+            Items = new List<OrderItem>();
+            CreatedAt = DateTime.Now;
+            Id = Guid.NewGuid().ToString();
+        }
     
         public Order(List<OrderItem> items)
         {

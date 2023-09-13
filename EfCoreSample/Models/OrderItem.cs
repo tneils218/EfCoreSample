@@ -1,4 +1,6 @@
-﻿namespace EfCoreSample.Models
+﻿using EfCoreSample.Services.DTOs;
+
+namespace EfCoreSample.Models
 {
     public class OrderItem
     {
@@ -6,5 +8,14 @@
         public decimal ProductPrice { get; set; }
         public int Quantity { get; set; }
         public string OrderId { get; set; } = null!;
+
+        public static OrderItem Create(decimal price, int quantity)
+        {
+            return new OrderItem
+            {
+                ProductPrice = price,
+                Quantity = quantity
+            };
+        }
     }
 }
