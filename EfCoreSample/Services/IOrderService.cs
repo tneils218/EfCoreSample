@@ -7,5 +7,7 @@ namespace EfCoreSample.Services
     {
         Task<Order> CreateOrder(OrderDTO orderDto);
         Task<List<Order>> GetAll(string? id = "");
+
+        Task<Order> UpdateOrder(string Id, OrderDTO orderDt);
     }
 }

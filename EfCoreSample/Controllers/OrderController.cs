@@ -61,10 +61,20 @@ namespace EfCoreSample.Controllers
         //        return StatusCode(500, ex.Message);
         //    }
         //}
-        //[HttpPut("{id}")] 
-        //public async Task<IActionResult> UpdateOrder(string id, OrderRequest request)
-        //{
-
-        //}
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateOrder(string id,OrderRequest request)
+        {
+            if (!ModelState.IsValid) return ValidationProblem(ModelState);
+            try
+            {
+                var orderDto = OrderDTO.CreateOrder(request.Items);
+                var order = await _orderService.UpdateOrder(id, orderDto);
+                return Ok(order);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }
